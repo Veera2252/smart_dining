@@ -1,15 +1,14 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 import { MenuItem, CustomizationOptions, AiAnalysisResult } from "../types";
+
+// Initialize properly according to guidelines. 
+// Assume API_KEY is pre-configured and valid.
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export const analyzeOrderRisk = async (
   item: MenuItem,
   customization: CustomizationOptions
 ): Promise<AiAnalysisResult> => {
-  // Initialize inside the function as per coding guidelines to avoid top-level crashes
-  // Always obtain API_KEY exclusively from process.env.API_KEY
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
   // Construct a prompt that asks Gemini to act as a Head Chef/Safety Officer
   const prompt = `
     You are an expert Head Chef and Food Safety Officer.
@@ -57,6 +56,7 @@ export const analyzeOrderRisk = async (
 
   } catch (error) {
     console.error("Gemini Analysis Failed:", error);
+    // Fallback in case of error
     return {
       safe: true,
       message: "Could not verify with AI, but your notes have been saved.",
