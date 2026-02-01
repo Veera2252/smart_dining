@@ -1,19 +1,14 @@
+
 import { GoogleGenAI, Type } from "@google/genai";
 import { MenuItem, CustomizationOptions, AiAnalysisResult } from "../types";
 
-const apiKey = process.env.API_KEY || '';
-// Initialize conditionally to prevent crashes if key is missing during dev, 
-// though the prompt ensures availability.
-const ai = apiKey ? new GoogleGenAI({ apiKey }) : null;
+// Always use a named parameter for apiKey and obtain it exclusively from process.env.API_KEY
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export const analyzeOrderRisk = async (
   item: MenuItem,
   customization: CustomizationOptions
 ): Promise<AiAnalysisResult> => {
-  if (!ai) {
-    return { safe: true, message: "AI Analysis unavailable (Missing API Key)", kitchenTicketSummary: "Standard Order" };
-  }
-
   // Construct a prompt that asks Gemini to act as a Head Chef/Safety Officer
   const prompt = `
     You are an expert Head Chef and Food Safety Officer.
@@ -54,6 +49,7 @@ export const analyzeOrderRisk = async (
       }
     });
 
+    // Access the text property directly (do not call text() as it is not a method)
     const resultText = response.text;
     if (!resultText) throw new Error("Empty response from AI");
     

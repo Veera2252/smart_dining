@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 import { MENU_ITEMS as INITIAL_MENU_ITEMS, CATEGORIES } from './data/menu';
 import MenuItemCard from './components/MenuItemCard';
@@ -168,7 +169,8 @@ const App: React.FC = () => {
           </div>
 
           {/* View Toggle - ONLY visible if NOT a customer (i.e. Admin or Kitchen view) or if explicitly switched */}
-          {view !== 'customer' && (
+          {/* Using explicit checks to avoid unintentional narrowing error on line 175 */}
+          {(view === 'kitchen' || view === 'admin') && (
              <div className="flex bg-blue-800/50 p-1 rounded-lg overflow-x-auto no-scrollbar">
                 <button 
                    onClick={() => setView('customer')}
